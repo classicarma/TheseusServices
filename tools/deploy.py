@@ -27,7 +27,7 @@ REPOPATH = "{}/{}".format(REPOUSER,REPONAME)
 REPONAME_WIKI = "TheseusServices.wiki"
 REPOPATH_WIKI = "{}/{}".format(REPOUSER,REPONAME_WIKI)
 
-WIKI_CLASSNAMES_FILE = "../{}/Class-Names.md".format(REPONAME_WIKI)
+WIKI_CLASSNAMES_FILE = "Class-Names.md"
 
 
 def update_translations(repo):
@@ -39,9 +39,13 @@ def update_translations(repo):
 def update_classnames(repo_wiki):
     print("ls: {}".format(os.listdir()))
 
-    output = sp.check_output(["python3", "tools/export_classnames.py", "--print"])
-    output = str(output, "utf-8")
-    print("output: {}".format(output))
+    classnames_new = sp.check_output(["python3", "tools/export_classnames.py", "--print"])
+    classnames_new = str(classnames_new, "utf-8")
+    print("classnames_new: {}".format(classnames_new))
+
+    classnames_old = repo_wiki.get_contents(WIKI_CLASSNAMES_FILE).content
+    print("classnames_old: {}".format(classnames_old))
+
     diff = sp.check_output(["git", "diff", "--name-only", WIKI_CLASSNAMES_FILE])
     diff = str(diff, "utf-8")
     print("diff: {}".format(diff))
@@ -52,7 +56,7 @@ def update_classnames(repo_wiki):
         repo_wiki.update_file(
             path="/{}".format(WIKI_CLASSNAMES_FILE),
             message="Update Class Names\nAutomatically committed through Travis CI.\n\n[ci skip]",
-            content=output, sha=sha, comitter=InputGitAuthor("Theseus-Aegis", "info@theseus-aegis.com")
+            content=classnames_new, sha=sha, comitter=InputGitAuthor("Theseus-Aegis", "info@theseus-aegis.com")
         )
         print("Class Names wiki page successfully updated.")
     else:
