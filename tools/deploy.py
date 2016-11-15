@@ -27,7 +27,7 @@ REPOPATH = "{}/{}".format(REPOUSER,REPONAME)
 REPONAME_WIKI = "TheseusServices.wiki"
 REPOPATH_WIKI = "{}/{}".format(REPOUSER,REPONAME_WIKI)
 
-WIKI_CLASSNAMES_FILE = "Class-Names.md"
+WIKI_CLASSNAMES_FILE = "../{}/Class-Names.md".format(REPONAME_WIKI)
 
 
 def update_translations(repo):
@@ -36,28 +36,20 @@ def update_translations(repo):
     issue = repo.get_issue(TRANSLATIONISSUE)
     issue.edit(body=TRANSLATIONBODY.format(diag))
 
-def update_classnames(repo_wiki):
-    print("ls: {}".format(os.listdir()))
-
+def update_classnames():
     classnames_new = sp.check_output(["python3", "tools/export_classnames.py", "--print"])
     classnames_new = str(classnames_new, "utf-8")
     print("classnames_new: {}".format(classnames_new))
 
-    classnames_old = repo_wiki.get_contents(WIKI_CLASSNAMES_FILE).content
-    print("classnames_old: {}".format(classnames_old))
+    with open(WIKI_CLASSNAMES_FILE, "w", newline="\n") as file:
+        file.write(classnames_new)
 
     diff = sp.check_output(["git", "diff", "--name-only", WIKI_CLASSNAMES_FILE])
     diff = str(diff, "utf-8")
     print("diff: {}".format(diff))
 
     if diff != "":
-        sha = repo_wiki.get_contents(WIKI_CLASSNAMES_FILE).sha
-        print("sha: {}".format(sha))
-        repo_wiki.update_file(
-            path="/{}".format(WIKI_CLASSNAMES_FILE),
-            message="Update Class Names\nAutomatically committed through Travis CI.\n\n[ci skip]",
-            content=classnames_new, sha=sha, comitter=InputGitAuthor("Theseus-Aegis", "info@theseus-aegis.com")
-        )
+        sp.call(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
@@ -87,15 +79,12 @@ def main():
 
     print("\nUpdating Class Names wiki page ...")
     try:
-        repo_wiki = Github(token).get_repo(REPOPATH_WIKI)
-        update_classnames(repo_wiki)
+        sp.call(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI)])
+        if os.path.isdir("../{}".format(REPONAME_WIKI)):
+            update_classnames()
     except:
         print("Failed to update Class Names wiki page.")
         print(traceback.format_exc())
-
-        os.chdir("..")
-        print("ls: {}".format(os.listdir()))
-
         return 1
 
     return 0
