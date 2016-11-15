@@ -41,6 +41,8 @@ def update_classnames():
     classnames_new = str(classnames_new, "utf-8")
     print("classnames_new: {}".format(classnames_new))
 
+    os.chdir("../{}".format(REPONAME_WIKI))
+
     with open(WIKI_CLASSNAMES_FILE, "w", newline="\n") as file:
         file.write(classnames_new)
 
@@ -54,6 +56,8 @@ def update_classnames():
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
+
+    os.chdir("../{}".format(REPONAME))
 
 
 def main():
@@ -83,9 +87,7 @@ def main():
         clone = sp.check_output(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         print("clone: {}".format(clone))
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
-            os.chdir("../{}".format(REPONAME_WIKI))
             update_classnames()
-            os.chdir("../{}".format(REPONAME))
         else:
             print("none!")
     except:
