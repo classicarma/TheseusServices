@@ -6,13 +6,13 @@ language: python
 python:
 - '3.4'
 before_script:
-- if [ -n "${GH_TOKEN}" ] && [ "${TRAVIS_BRANCH}" == "travisDocs" ] && [ "${TRAVIS_PULL_REQUEST}" == "true" ]; then
+- if [ -n "${GH_TOKEN}" ]; then
     pip install pygithub;
     pip install pygithub3;
   fi
 script:
 - python3 tools/sqf_validator.py
-- if [ -n "${GH_TOKEN}" ] && [ "${TRAVIS_BRANCH}" == "travisDocs" ] && [ "${TRAVIS_PULL_REQUEST}" == "true" ]; then
+- if [ -n "${GH_TOKEN}" ]; then
     python3 tools/deploy.py;
   fi
 env:
