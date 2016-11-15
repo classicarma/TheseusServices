@@ -84,7 +84,7 @@ def main():
 
     print("\nUpdating Class Names wiki page ...")
     try:
-        sp.check_output(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
+        sp.call(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
             update_classnames()
         else:
