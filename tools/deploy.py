@@ -12,7 +12,7 @@ import sys
 import shutil
 import traceback
 import subprocess as sp
-from github import Github, InputGitAuthor
+from pygithub3 import Github
 
 
 TRANSLATIONISSUE = 1
@@ -79,9 +79,11 @@ def main():
 
     print("\nUpdating Class Names wiki page ...")
     try:
-        sp.call(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI)])
+        sp.call(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
             update_classnames()
+        else:
+            print("none!")
     except:
         print("Failed to update Class Names wiki page.")
         print(traceback.format_exc())
