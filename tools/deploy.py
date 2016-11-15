@@ -49,8 +49,10 @@ def update_classnames():
     diff = str(diff, "utf-8")
 
     if diff != "":
+        sp.call(["git", "config", "user.name", "Theseus-Aegis"])
+        sp.call(["git", "config", "user.email", "info@theseus-aegis.com"])
         sp.call(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
-        #sp.call(["git", "push"])
+        sp.call(["git", "push"])
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
