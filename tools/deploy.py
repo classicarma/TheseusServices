@@ -39,7 +39,6 @@ def update_translations(repo):
 def update_classnames():
     classnames_new = sp.check_output(["python3", "tools/export_classnames.py", "--print"])
     classnames_new = str(classnames_new, "utf-8")
-    print("classnames_new: {}".format(classnames_new))
 
     os.chdir("../{}".format(REPONAME_WIKI))
 
@@ -48,11 +47,10 @@ def update_classnames():
 
     diff = sp.check_output(["git", "diff", "--name-only", WIKI_CLASSNAMES_FILE])
     diff = str(diff, "utf-8")
-    print("diff: {}".format(diff))
 
     if diff != "":
-        #sp.check_output(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
-        #sp.check_output(["git", "push"])
+        sp.call(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
+        sp.call(["git", "push"])
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
@@ -87,8 +85,6 @@ def main():
         sp.call(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
             update_classnames()
-        else:
-            print("none!")
     except:
         print("Failed to update Class Names wiki page.")
         print(traceback.format_exc())
