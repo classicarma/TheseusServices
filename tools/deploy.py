@@ -27,7 +27,7 @@ REPOPATH = "{}/{}".format(REPOUSER,REPONAME)
 REPONAME_WIKI = "TheseusServices.wiki"
 REPOPATH_WIKI = "{}/{}".format(REPOUSER,REPONAME_WIKI)
 
-WIKI_CLASSNAMES_FILE = "../{}/Class-Names.md".format(REPONAME_WIKI)
+WIKI_CLASSNAMES_FILE = "Class-Names.md"
 
 
 def update_translations(repo):
@@ -51,8 +51,8 @@ def update_classnames():
     print("diff: {}".format(diff))
 
     if diff != "":
-        sp.check_output(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
-        sp.check_output(["git"])
+        #sp.check_output(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
+        #sp.check_output(["git", "push"])
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
@@ -84,8 +84,7 @@ def main():
 
     print("\nUpdating Class Names wiki page ...")
     try:
-        clone = sp.check_output(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
-        print("clone: {}".format(clone))
+        sp.check_output(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
             update_classnames()
         else:

@@ -12,13 +12,17 @@ TEMP_DUMP = "temp\\classnames.md"
 ##########################
 
 def main():
+    scriptpath = os.path.realpath(__file__)
+    projectpath = os.path.dirname(os.path.dirname(scriptpath))
+    projectpath = os.path.join(projectpath, "addons")
+
     # Get all info
     classNames = []
     gameNames = []
     inheritNames = []
 
     # Class Names and Inherits From Names
-    for root, dirs, files in os.walk("..\\addons"):
+    for root, dirs, files in os.walk(projectpath):
         for name in files:
             if name.startswith("Cfg") and name.endswith(".hpp"):
                 with open(os.path.join(root, name)) as cfgFile:
@@ -39,7 +43,7 @@ def main():
     # In-Game Names
     for className in classNames:
         stringFound = False
-        for root, dirs, files in os.walk("..\\addons"):
+        for root, dirs, files in os.walk(projectpath):
             if stringFound: break
             for name in files:
                 if stringFound: break
