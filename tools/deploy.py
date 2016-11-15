@@ -49,7 +49,8 @@ def update_classnames():
     print("diff: {}".format(diff))
 
     if diff != "":
-        sp.call(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
+        sp.check_output(["git", "commit", "-am", "Update Class Names\nAutomatically committed through Travis CI."])
+        sp.check_output(["git"])
         print("Class Names wiki page successfully updated.")
     else:
         print("Class Names wiki page update skipped - no change.")
@@ -82,7 +83,9 @@ def main():
         clone = sp.check_output(["git", "clone", "https://github.com/{}.git".format(REPOPATH_WIKI), "../{}".format(REPONAME_WIKI)])
         print("clone: {}".format(clone))
         if os.path.isdir("../{}".format(REPONAME_WIKI)):
+            os.chdir("../{}".format(REPONAME_WIKI))
             update_classnames()
+            os.chdir("../{}".format(REPONAME))
         else:
             print("none!")
     except:
