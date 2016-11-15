@@ -27,7 +27,7 @@ REPOPATH = "{}/{}".format(REPOUSER,REPONAME)
 REPONAME_WIKI = "TheseusServices.wiki"
 REPOPATH_WIKI = "{}/{}".format(REPOUSER,REPONAME_WIKI)
 
-WIKI_CLASSNAMES_FILE = "Class-Names.md"
+WIKI_CLASSNAMES_FILE = "../{}/Class-Names.md".format(REPONAME_WIKI)
 
 
 def update_translations(repo):
@@ -37,6 +37,8 @@ def update_translations(repo):
     issue.edit(body=TRANSLATIONBODY.format(diag))
 
 def update_classnames(repo_wiki):
+    print("ls: {}".format(os.listdir()))
+
     output = sp.check_output(["python3", "tools/export_classnames.py", "--print"])
     output = str(output, "utf-8")
     print("output: {}".format(output))
@@ -86,6 +88,10 @@ def main():
     except:
         print("Failed to update Class Names wiki page.")
         print(traceback.format_exc())
+
+        os.chdir("..")
+        print("ls: {}".format(os.listdir()))
+
         return 1
 
     return 0
